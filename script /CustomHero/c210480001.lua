@@ -50,6 +50,12 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
 -- Effect 2
 function s.thfilter(c)
 	return c:IsSetCard(SET_ELEMENTAL_HERO|SET_DESTINY_HERO|SET_MASKED_HERO|SET_VISION_HERO|SET_XTRA_HERO|SET_CONTRAST_HERO|SET_FAVORITE_HERO) and c:IsMonster() and c:IsAbleToHand()
