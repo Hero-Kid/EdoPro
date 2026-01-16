@@ -64,6 +64,11 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local sc=Duel.SelectMatchingCard(tp,LOCATION_DECK,0,1,1,nil):GetFirst()
+	Duel.ConfirmCards(1-tp,sc)
+end
 -- Effect 3
 function s.gyfilter(c)
 	return c:IsSetCard(SET_ELEMENTAL_HERO|SET_DESTINY_HERO|SET_MASKED_HERO|SET_VISION_HERO|SET_XTRA_HERO|SET_CONTRAST_HERO|SET_FAVORITE_HERO) and c:IsMonster() and c:IsAbleToHand() and not c:IsCode(id)
@@ -78,14 +83,7 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_GRAVE,0,5,5,nil)
-	if #g~=5 then return end
+	local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_GRAVE,0,0,3,nil)
+	if #g~=1 then return end
 	Duel.HintSelection(g)
-	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)==5 then
-		if Duel.GetOperatedGroup():IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-		Duel.BreakEffect()
-		if Duel.Draw(p,d,REASON_EFFECT)==2 and c:IsRelateToEffect(e) and c:IsFaceup() then
-			c:UpdateAttack(1000)
-		end
-	end
 end
