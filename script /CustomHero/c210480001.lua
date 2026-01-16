@@ -6,26 +6,30 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE|EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_TO_HAND)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
-	e1:SetCost(s.spcost)
+	e1:SetCondition(function(e) return e:GetHandler():IsPreviousLocation(LOCATION_DECK) end)
+	e1:SetCost(s.SelfReveal)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--Add 1 "Masked HERO" monster from your Deck or GY to your hand, except "Masked HERO Dusk Crow"
+	--Add 1 "Polymerization" of "Fusion" Spell and lock into "HERO" if Special Summoned
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetCondition(function(e) return e:GetHandler():IsSummonLocation(LOCATION_HAND) end)
+	e2:SetCode(EVENT_SUMMON_SUCCESS) -- Summoned succesfuly from hand
 	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
+	--Banish from GY to target 3 "HERO" monsters and shuffle them into deck
 	local e3=Effect.CreateEffect(c)
-	e2b:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e2b)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e3)
 end
 
 
